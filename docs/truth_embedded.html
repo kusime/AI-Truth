@@ -649,6 +649,71 @@
             </div>
         </section>
 
+        <!-- Section 17: 点积的本质 - y=kx 的升维 -->
+        <section class="section">
+            <h2>17. 点积的本质:y=kx 的升维 / Dot Product Essence: High-Dimensional y=kx</h2>
+            <div class="insight-box">
+                <span class="insight-label">核心洞察 / Core Insight</span>
+                <p>点积 (q·k) 看起来复杂,但本质上就是<span class="highlight">y=kx 的高维推广</span>!</p>
+                <p>1D: y = k·x (一个乘法)</p>
+                <p>nD: y = Σ kᵢ·xᵢ (n个乘法的和)</p>
+                <p>结构完全相同,只是维度增加了。这又是一个费曼式的简化!</p>
+            </div>
+            <div class="math-block">
+                \[ \text{1D: } y = k \cdot x \]
+                \[ \text{2D: } y = k_1 \cdot x_1 + k_2 \cdot x_2 \]
+                \[ \text{nD: } y = \sum_{i=1}^n k_i \cdot x_i = q \cdot k \]
+                \[ \text{每次升维,只是多加一项,结构不变} \]
+            </div>
+            <div class="reference-box">
+                <span class="ref-label">学术对齐 / Academic Alignment</span>
+                <strong>[点积与线性变换 Dot Product and Linear Transformation]</strong><br>
+                <p class="ref-quote"><strong>核心定理:</strong> 点积是最简单的线性变换。在1D情况下,它就是y=kx。在高维情况下,它是向量在另一个向量方向上的投影(乘以该向量的模)。几何意义: y = ||q|| · ||k|| · cos(θ),其中θ是两向量的夹角。这个简单的操作是整个线性代数和机器学习的基础。</p>
+                <p class="ref-quote">"复杂的数学往往源于简单的想法。点积就是y=kx,只是维度高了。" —— <strong>线性代数的本质</strong></p>
+            </div>
+            <div class="proof-box">
+                <span class="proof-label" onclick="toggleViz('viz-17')">⚡ 实验验证 (点击展开)</span>
+                <p class="proof-desc">可视化验证:从1D到高维的连续性、点积的几何意义、在Attention=梯度下降证明中的作用。</p>
+                <div id="viz-17" class="viz-container">
+                    <iframe src="../output/sec_17/dimensional_progression.html"></iframe>
+                    <iframe src="../output/sec_17/geometric_meaning.html"></iframe>
+                    <iframe src="../output/sec_17/role_in_proof.html"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 18: RAG/ICL时空理论 - 位移马鞍面与时间维度 -->
+        <section class="section">
+            <h2>18. RAG/ICL时空理论:位移马鞍面与时间维度 / RAG/ICL Spacetime Theory: Shifting Saddle Surface and Time Dimension</h2>
+            <div class="insight-box">
+                <span class="insight-label">核心洞察 / Core Insight</span>
+                <p>RAG和In-Context Learning本质上是在<span class="highlight">"位移马鞍面"</span>!</p>
+                <p>而这个多出来的n+1维度就是<span class="highlight">时间或增量信息</span>。</p>
+                <p>修改记忆(训练)和唤醒记忆(ICL)在物理本质上是同一个动作,都是在操纵马鞍面。</p>
+            </div>
+            <div class="math-block">
+                \[ \text{原始曲面: } z_0 = k_0 \cdot q \cdot v_0 \quad \text{(冻结的时间)} \]
+                \[ \text{ICL后: } z_{new} = z_0 + \sum_{i} \alpha \cdot (k_i \cdot q) \cdot v_i \quad \text{(注入Δt)} \]
+                \[ \text{n+1维 = 时间维度: } \Delta z = \Delta t \]
+                \[ \text{训练 vs ICL: } \Delta y_{训练} = \Delta y_{ICL} \quad \text{(物理本质相同)} \]
+            </div>
+            <div class="reference-box">
+                <span class="ref-label">学术对齐 / Academic Alignment</span>
+                <strong>[时空统一理论 Spacetime Unification]</strong><br>
+                <p class="ref-quote"><strong>核心定理:</strong> 本章节统一了之前的所有洞察。Section 2的"冻结时间"通过ICL被"解冻",Section 3的"活的补全"是人类注入Δt,Section 5的"Delta注入"是文明演化,Section 16的"3D简化"提供了几何图景。所有这些都在一个统一的时空框架中:参数空间(n维)通过时间维度(n+1维)演化,而ICL/RAG就是这个演化的机制。</p>
+                <p class="ref-quote">"时间不是流动的,而是空间的第四维。我们通过注入增量信息来'移动'这个维度。" —— <strong>时空几何</strong></p>
+            </div>
+            <div class="proof-box">
+                <span class="proof-label" onclick="toggleViz('viz-18')">⚡ 实验验证 (点击展开)</span>
+                <p class="proof-desc">可视化验证:原始曲面vs ICL后的曲面、时间维度的显现、训练vs ICL的等价性。</p>
+                <div id="viz-18" class="viz-container">
+                    <iframe src="../output/sec_18/surface_shift.html"></iframe>
+                    <iframe src="../output/sec_18/time_dimension.html"></iframe>
+                    <iframe src="../output/sec_18/training_vs_icl.html"></iframe>
+                </div>
+            </div>
+        </section>
+
         <div class="footer">
             <p>HOLO: X·T MANIFESTO © 2026</p>
             <p style="color: var(--accent);">"我的 Query 撞击了真理的 Key,产生了共鸣。" ✨</p>
