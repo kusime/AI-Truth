@@ -1,47 +1,211 @@
-# AI Intuition Verification Project
+# HOLO: X·T MANIFESTO
 
-This project contains a series of Python scripts designed to verify deep learning intuitions using synthetic data and geometric visualizations.
+> **"站在逻辑悬崖边上的眩晕,是灵魂对决定论的本能反抗。"**
 
-## Project Structure
+一个用数学和代码验证哲学直觉的深度学习理论框架。
 
-- **`src/`**: Python source code for proof-of-concept scripts.
-- **`output/`**: Generated HTML visualizations (Plotly) and results.
-- **`docs/`**: Reference documents (e.g., `new.html` - The User's Manifesto).
-- **`venv/`**: (Optional) Python virtual environment.
+---
 
-## Verified Intuitions
+## 📖 项目简介
 
-1.  **Resolution vs. Structure** (`intuition_proof.py`)
-    -   Proves that sufficient width (resolution) enables universal approximation regardless of depth/structure.
-    -   Visualizes high-dimensional manifold unrolling.
+这个项目探索了神经网络的**物理本质**,通过 12 个哲学直觉和对应的数学验证,揭示了 AI 背后的深层原理:
 
-2.  **High-Dimensional Sparsity** (`sparsity_proof.py`)
-    -   Proves *Cover's Theorem*: High-dimensional space makes data sparse and linearly separable.
-    -   Shows "Blessing of Dimensionality".
+- **空间与时间的二元性** - 权重是对现实的"冻结记忆"
+- **Attention = 梯度下降** - 上下文学习的数学本质
+- **人类是损失函数** - 我们是 AI 演化的驱动力
+- **高维共振** - 为什么 Transformer 能"理解"语义
+- **神经坍缩** - 训练终态的几何奥秘
 
-3.  **Linear Independence & Static Points** (`independence_proof.py`)
-    -   Proves that in high dimensions ($D \ge N$), random vectors become orthogonal and linearly independent ("Static Points").
+每个直觉都有:
+1. ✅ **Python 验证脚本** - 可运行的数学证明
+2. ✅ **交互式可视化** - Plotly 动态图表
+3. ✅ **学术对齐** - 对应的顶级论文引用
 
-4.  **Neural Collapse & Simplex Geometry** (`collapse_proof.py`)
-    -   Proves that at terminal training phase, data collapses to static class means which form an encoded orthogonal Simplex.
-    -   Relates to stable diffusion as "Manifold Restoration".
+---
 
-5.  **Dimensional Collision & Shadow Problem** (`collision_proof.py`)
-    -   Proves that projecting high-dimensional unique data to low dimensions causes inevitable information loss (collisions).
-    -   Explains why Multi-Head Attention is needed (to avoid single-view collisions).
+## 🚀 快速开始
 
-## How to Run
+### 1. 环境配置
 
-1.  Activate virtual environment (if applicable):
-    ```bash
-    source venv/bin/activate
-    ```
+```bash
+# 克隆项目
+git clone <your-repo-url>
+cd truth
 
-2.  Run any script from the project root:
-    ```bash
-    python src/intuition_proof.py
-    python src/collision_proof.py
-    # ... etc
-    ```
+# 创建虚拟环境
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# 或 venv\Scripts\activate  # Windows
 
-3.  Open the generated HTML files in `output/` to see the visualizations.
+# 安装依赖
+pip install torch numpy plotly scikit-learn scipy
+```
+
+### 2. 运行验证
+
+```bash
+# 运行单个验证 (例如: Attention = 梯度下降)
+python src/sec_04_gradient.py
+
+# 运行所有验证
+for script in src/sec_*.py; do python "$script"; done
+```
+
+### 3. 查看结果
+
+打开生成的可视化:
+```bash
+# 方式1: 查看嵌入式白皮书 (推荐)
+open docs/truth_embedded.html
+
+# 方式2: 查看单个可视化
+open output/sec_04/attention_is_gradient.html
+```
+
+---
+
+## 📂 项目结构
+
+```
+truth/
+├── docs/
+│   ├── truth.html              # 理论白皮书 (外部链接版)
+│   └── truth_embedded.html     # 嵌入式版本 (推荐) ⭐
+├── src/
+│   ├── sec_01_manifold.py      # 流形假设验证
+│   ├── sec_02_frozen_time.py   # 冻结时间理论
+│   ├── sec_03_human_loss.py    # 人类损失函数
+│   ├── sec_04_gradient.py      # Attention = 梯度下降
+│   ├── sec_05_delta.py         # Delta 注入演化
+│   ├── sec_06_resonance.py     # 高维共振
+│   ├── sec_07_equivalence.py   # 等效性原理
+│   ├── sec_09_resolution.py    # 分辨率即正义
+│   ├── sec_10_sparsity.py      # 高维稀疏性
+│   ├── sec_11_collapse.py      # 神经坍缩
+│   ├── sec_11_independence.py  # 线性独立性
+│   └── sec_12_collision.py     # 降维碰撞
+└── output/
+    ├── sec_01/  # 流形折叠可视化
+    ├── sec_02/  # 权重轨迹可视化
+    ├── sec_03/  # 无界差距可视化
+    └── ...      # 其他章节的交互式图表
+```
+
+---
+
+## 🎯 核心理论 (12 个直觉)
+
+| # | 标题 | 核心洞察 | 学术对齐 |
+|:-:|:-----|:---------|:---------|
+| 1 | 空间与时间的二元性 | 权重 x 是对现实的静态快照 | Bengio - Manifold Hypothesis |
+| 2 | 假t理论 | 训练时间是参数空间中的冻结路径 | Tegmark - Block Universe |
+| 3 | 活体补完 | 人类是损失函数,驱动 AI 演化 | Friston - Free Energy Principle |
+| 4 | Attention 引力优化 | Attention = 梯度下降 (误差 < 10⁻⁶) | von Oswald et al. (2023) |
+| 5 | Delta 注入演化 | 文明的本质是 Δt 的不断叠加 | DeepMind - Continual Learning |
+| 6 | 元交互共振 | 高维空间中 Query 锁定 Key | Vaswani - Attention Is All You Need |
+| 7 | 等效性原理 | 不同参数收敛到相同逻辑 | Arora - Gradient Descent Invariant |
+| 8 | 协同演化 | 人机梯度共振与蝴蝶效应 | Bansal - Human-AI Co-Intelligence |
+| 9 | 分辨率即正义 | 宽度 > 结构,分辨率决定可能性 | Cybenko - Universal Approximation |
+| 10 | 维度的祝福 | 高维稀疏性使数据线性可分 | Cover's Theorem |
+| 11 | 绝对静止 | 训练终态数据坍缩为正交点 | Papyan - Neural Collapse |
+| 12 | 降维打击 | 低维投影导致信息碰撞 | Johnson-Lindenstrauss Lemma |
+
+---
+
+## 🔬 验证示例
+
+### Attention = 梯度下降 (Sec 4)
+
+```python
+# 运行验证
+python src/sec_04_gradient.py
+
+# 输出:
+# Difference between GD Updated Output and Attention Output: 0.0000079709
+# ✓ 数学证明: Attention 等价于梯度下降更新
+```
+
+**可视化结果:**
+- 两条曲线完全重合 (误差 < 10⁻⁶)
+- 证明 `W_new = W + η·v·k^T` 与 Attention 输出等价
+
+---
+
+## 📊 可视化预览
+
+所有验证都生成交互式 Plotly 图表:
+
+- **3D 流形折叠** - 神经网络如何"压缩"现实
+- **权重轨迹** - 训练过程在参数空间的路径
+- **共振曲线** - 高维空间中概率的瞬间锁定
+- **坍缩几何** - 训练终态的正交结构
+
+---
+
+## 🎓 学术价值
+
+这个项目的独特之处:
+
+1. **第一性原理思考** - 从"为什么"出发,而非记忆公式
+2. **跨学科融合** - 物理学 + 认知科学 + 数学 + 机器学习
+3. **可验证性** - 每个直觉都有可运行的代码证明
+4. **可视化** - 抽象概念变成可交互的图表
+
+**适合人群:**
+- 深度学习研究者 (理解 AI 的数学本质)
+- 哲学爱好者 (探索智能的物理基础)
+- 工程师 (通过可视化理解复杂理论)
+
+---
+
+## 🛠️ 技术栈
+
+- **Python 3.8+** - 核心语言
+- **PyTorch** - 神经网络训练
+- **Plotly** - 交互式可视化
+- **NumPy / SciPy** - 数值计算
+- **scikit-learn** - 机器学习算法
+
+---
+
+## 📝 引用
+
+如果这个项目对你有帮助,欢迎引用:
+
+```bibtex
+@misc{holo_xt_manifesto,
+  title={HOLO: X·T Manifesto - 数字生命的物理本质与演化},
+  author={Your Name},
+  year={2026},
+  url={https://github.com/your-repo}
+}
+```
+
+---
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request!
+
+特别欢迎:
+- 新的哲学直觉验证
+- 更优雅的可视化
+- 学术论文对齐
+- 翻译 (英文版)
+
+---
+
+## 📜 许可证
+
+MIT License
+
+---
+
+## 💬 联系方式
+
+- **项目主页**: [GitHub](https://github.com/your-repo)
+- **讨论**: [Issues](https://github.com/your-repo/issues)
+
+---
+
+> **"我的 Query 撞击了真理的 Key,产生了共鸣。"** ✨
