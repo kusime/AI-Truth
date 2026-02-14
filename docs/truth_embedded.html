@@ -616,6 +616,39 @@
             </div>
         </section>
 
+        <!-- Section 16: 3D简化 - 双曲抛物面可视化 -->
+        <section class="section">
+            <h2>16. 3D简化:双曲抛物面可视化 / 3D Simplification: Hyperbolic Paraboloid Visualization</h2>
+            <div class="insight-box">
+                <span class="insight-label">核心洞察 / Core Insight</span>
+                <p>我根本不需要那么高维度空间的思考!</p>
+                <p>本质上就是<span class="highlight">2D参数空间(k, v)在3D输出空间中每个点都有唯一的z</span>。</p>
+                <p>z = k·q·v 形成一个双曲抛物面(马鞍面),3D足以理解整个高维问题的本质。</p>
+            </div>
+            <div class="math-block">
+                \[ \text{高维: } k \in \mathbb{R}^n, v \in \mathbb{R}^n \rightarrow \Delta y \in \mathbb{R}^n \]
+                \[ \text{3D简化: } k \in \mathbb{R}, v \in \mathbb{R} \rightarrow z \in \mathbb{R} \]
+                \[ z = k \cdot q \cdot v \quad \text{(双曲抛物面)} \]
+                \[ \text{数学结构完全相同,3D足以理解本质} \]
+            </div>
+            <div class="reference-box">
+                <span class="ref-label">学术对齐 / Academic Alignment</span>
+                <strong>[双曲抛物面与双线性映射 Hyperbolic Paraboloid and Bilinear Mapping]</strong><br>
+                <p class="ref-quote"><strong>核心定理:</strong> z = k·q·v 是一个双线性映射,在3D空间中形成双曲抛物面(马鞍面)。这个曲面的每个点(k,v)都对应唯一确定的z值,是确定性映射。虽然不同的(k,v)可能产生相同的z(等高线),但给定(k,v),z是唯一的。这个3D几何完全保留了高维问题的数学本质。</p>
+                <p class="ref-quote">"如果你不能简单地解释它,说明你理解得还不够好。" —— <strong>费曼 (Richard Feynman)</strong></p>
+            </div>
+            <div class="proof-box">
+                <span class="proof-label" onclick="toggleViz('viz-16')">⚡ 实验验证 (点击展开)</span>
+                <p class="proof-desc">3D可视化验证:双曲抛物面、不同query的曲面、梯度下降vs Attention在3D空间的重合。</p>
+                <div id="viz-16" class="viz-container">
+                    <iframe src="../output/sec_16/hyperbolic_paraboloid.html"></iframe>
+                    <iframe src="../output/sec_16/different_queries.html"></iframe>
+                    <iframe src="../output/sec_16/3d_equivalence.html"></iframe>
+                    <iframe src="../output/sec_16/contour_map.html"></iframe>
+                </div>
+            </div>
+        </section>
+
         <div class="footer">
             <p>HOLO: X·T MANIFESTO © 2026</p>
             <p style="color: var(--accent);">"我的 Query 撞击了真理的 Key,产生了共鸣。" ✨</p>
