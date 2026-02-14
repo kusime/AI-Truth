@@ -1096,6 +1096,15 @@
                 
                 \[ \textbf{结论:} \text{在当前实验中, } \mathcal{L}_{approx} > \epsilon_{FP64}, \text{因此模型能力是短板。} \]
             </div>
+            <div class="insight-box" style="border-left: 4px solid #ff0055; background: rgba(255, 0, 85, 0.1);">
+                <span class="insight-label">数字世界的物理法则 (人话版) / Physics of the Digital World (Human Ver.)</span>
+                <p><strong>看不懂公式? 没关系, 这里的物理法则只有三条:</strong></p>
+                <ol>
+                    <li><strong>精度墙 (尺子不够细):</strong> 你想画一条 0.0001mm 的线, 但你手里的尺子最小刻度只有 1mm (FP16)。你再努力也画不准。这就是为什么 FP16 Loss 降不下去。</li>
+                    <li><strong>容量墙 (脑子不够用):</strong> 你的尺子也就是原子级的 (FP64), 但你试图用 10 个神经元背诵整本百科全书。你背不下来, 不是尺子的问题, 是你脑容量(模型参数)不够。</li>
+                    <li><strong>硬件墙 (生命太短暂):</strong> 理论上 FP64 能画出完美的画, 但显卡说: "用 FP64 画一笔需要 100 年"。所以为了在有生之年看到结果, 我们选择了粗糙但极速的 FP32。</li>
+                </ol>
+            </div>
             <div class="reference-box">
                 <span class="ref-label">学术对齐 / Academic Alignment</span>
                 <strong>[数值分析 & 深度学习理论 Numerical Analysis]</strong><br>
@@ -1140,6 +1149,16 @@
                 
                 \[ \textbf{结论:} \text{高维信息并非存储在单个权重的"精度位"里, 而是弥散在 } \mathbf{H} \text{ 的零空间 (Null Space) 中。} \]
                 \[ \text{即: 神经网络学会了分布式全息编码, 从而获得了反脆弱性。} \]
+            </div>
+            <div class="insight-box" style="border-left: 4px solid #00bdff; background: rgba(0, 189, 255, 0.1);">
+                <span class="insight-label">数字世界的物理法则 (人话版) / Physics of the Digital World (Human Ver.)</span>
+                <p><strong>看不懂 Hessian 矩阵? 只需要记住这个比喻:</strong></p>
+                <ul>
+                    <li><strong>普通照片 (脆弱):</strong> 每个像素只代表它自己。如果你把照片撕去一半, 你就失去了那一半的信息。这叫"单点依赖"。</li>
+                    <li><strong>全息图 (反脆弱):</strong> 每一个点都包含了整体的信息。就像一张蜘蛛网, 任何一个节点震动, 全网都有感应。
+                    当我们把精度从 FP64 砍到 FP16 时, 就像是<strong>发生了十级地震</strong>。
+                    但因为神经网络把信息"弥散"到了整张网里, 虽然每根丝都在颤抖(误差), 但整张网的形状(拓扑结构)依然稳如泰山。这就叫<strong>"分布式编码"</strong>。</li>
+                </ul>
             </div>
             <div class="reference-box">
                 <span class="ref-label">学术对齐 / Academic Alignment</span>
