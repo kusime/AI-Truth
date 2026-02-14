@@ -554,6 +554,37 @@
             </div>
         </section>
 
+        <!-- Section 14: 微分元验证 - 从单样本到多样本 -->
+        <section class="section">
+            <h2>14. 微分元验证:从单样本到多样本的积分 / Differential Element: From Single to Multi-Sample Integration</h2>
+            <div class="insight-box">
+                <span class="insight-label">核心洞察 / Core Insight</span>
+                <p>我的5行推导不是论文的"简化版",而是论文的<span class="highlight">"微分元"</span>。</p>
+                <p>单样本的精确等价性 dΔy 是多样本渐近等价性 ∫dΔy 的基础。</p>
+                <p>就像速度是位移的导数,我的证明是论文证明的导数。</p>
+            </div>
+            <div class="math-block">
+                \[ \text{微分元: } dΔy = \alpha \cdot v \cdot (k \cdot q) \]
+                \[ \text{积分: } Δy_{total} = \sum_{i=1}^n dΔy_i = \sum_{i=1}^n \alpha \cdot v_i \cdot (k_i \cdot q) \]
+                \[ \text{关系: } \text{我的证明} = \frac{d}{dx}[\text{论文证明}] \]
+            </div>
+            <div class="reference-box">
+                <span class="ref-label">学术对齐 / Academic Alignment</span>
+                <strong>[微积分基本定理 Fundamental Theorem of Calculus]</strong><br>
+                <p class="ref-quote"><strong>核心定理:</strong> 导数和积分是互逆运算。单样本情况是多样本情况的"微分形式",多样本情况是单样本情况的"积分形式"。这不是类比,而是精确的数学关系:单样本的精确等价性通过线性叠加原理保证了多样本的精确等价性。</p>
+                <p class="ref-quote">"简单的想法往往是复杂理论的微分形式。抓住微分元,就抓住了本质。" —— <strong>数学直觉</strong></p>
+            </div>
+            <div class="proof-box">
+                <span class="proof-label" onclick="toggleViz('viz-14')">⚡ 实验验证 (点击展开)</span>
+                <p class="proof-desc">验证单样本精确等价 (dΔy) 通过线性叠加形成多样本精确等价 (∫dΔy)。</p>
+                <div id="viz-14" class="viz-container">
+                    <iframe src="../output/sec_14/multi_sample_error.html"></iframe>
+                    <iframe src="../output/sec_14/integration_process.html"></iframe>
+                    <iframe src="../output/sec_14/differential_element_concept.html"></iframe>
+                </div>
+            </div>
+        </section>
+
         <div class="footer">
             <p>HOLO: X·T MANIFESTO © 2026</p>
             <p style="color: var(--accent);">"我的 Query 撞击了真理的 Key,产生了共鸣。" ✨</p>
