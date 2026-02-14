@@ -585,6 +585,37 @@
             </div>
         </section>
 
+        <!-- Section 15: n+1维不变性 - 单位标尺与几何不变量 -->
+        <section class="section">
+            <h2>15. n+1维不变性:单位标尺与几何不变量 / n+1 Dimensional Invariance: Unit Scale and Geometric Invariants</h2>
+            <div class="insight-box">
+                <span class="insight-label">核心洞察 / Core Insight</span>
+                <p>我们能成功是因为抓到了<span class="highlight">最小的线性不可分</span> - 秩-1矩阵,这是n维空间的"单位标尺"。</p>
+                <p>在n+1维输出空间中,单样本和多样本都是"点",只是位置不同。</p>
+                <p>所以"单样本 vs 多样本"是n维的概念,在n+1维中它们是<span class="highlight">同类几何对象</span>。</p>
+            </div>
+            <div class="math-block">
+                \[ \text{n维空间: } \Delta W = \alpha \cdot v \otimes k^T \quad \text{(秩-1矩阵,单位标尺)} \]
+                \[ \text{n+1维空间: } \Delta y = \alpha \cdot (k \cdot q) \cdot v \quad \text{(向量,几何不变量)} \]
+                \[ \text{单样本 = 一个点, 多样本 = 多个点的和 = 另一个点} \]
+            </div>
+            <div class="reference-box">
+                <span class="ref-label">学术对齐 / Academic Alignment</span>
+                <strong>[秩-1矩阵与奇异值分解 Rank-1 Matrix and SVD]</strong><br>
+                <p class="ref-quote"><strong>核心定理:</strong> 秩-1矩阵是矩阵空间的"原子",不能再分解为更小的有意义的矩阵。它只有1个非零奇异值,是最小的线性不可分单元。在输出空间中,秩-1矩阵的作用等价于一个标量乘以一个向量,定义了唯一的方向和大小。</p>
+                <p class="ref-quote">"在高维空间中,维度的相对性决定了观察的视角。n维的复杂性在n+1维中可能是简单的不变量。" —— <strong>几何直觉</strong></p>
+            </div>
+            <div class="proof-box">
+                <span class="proof-label" onclick="toggleViz('viz-15')">⚡ 实验验证 (点击展开)</span>
+                <p class="proof-desc">验证秩-1矩阵的最小性,以及单样本和多样本在n+1维空间中的几何等价性。</p>
+                <div id="viz-15" class="viz-container">
+                    <iframe src="../output/sec_15/rank_one_unit_scale.html"></iframe>
+                    <iframe src="../output/sec_15/n_plus_1_vectors.html"></iframe>
+                    <iframe src="../output/sec_15/dimensional_relativity.html"></iframe>
+                </div>
+            </div>
+        </section>
+
         <div class="footer">
             <p>HOLO: X·T MANIFESTO © 2026</p>
             <p style="color: var(--accent);">"我的 Query 撞击了真理的 Key,产生了共鸣。" ✨</p>
