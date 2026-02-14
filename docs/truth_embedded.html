@@ -1086,21 +1086,26 @@
                 <p><strong>结论: GPU内部不是真空。</strong> 精度(FP16/FP32)就是这个世界的"普朗克常数"。</p>
             </div>
             <div class="math-block">
-                \[ \text{极限验证(10k Neurons): } \text{Loss}_{32} \approx 5.79 \times 10^{-6} \text{ (新纪录)} \]
-                \[ \text{FP64反击战: } \text{因消费级显卡FP64算力阉割(1/64速率)而超时终止} \]
-                \[ \text{最终结论: } \text{理论上FP64必胜, 但物理硅基(GPU)选择了FP32。} \]
+                \[ \textbf{I. 精度壁垒 (Precision Barrier):} \]
+                \[ \lim_{t \to \infty} \mathcal{L}(\theta_t) \ge \mathcal{L}_{min} \quad \text{s.t.} \quad \|\eta \nabla \mathcal{L}(\theta_t)\| < \epsilon_{mach} \]
+                \[ \text{其中 } \epsilon_{mach} \approx 10^{-4} \text{ (FP16), } 10^{-7} \text{ (FP32)} \]
+                
+                \[ \textbf{II. 容量壁垒 (Capacity Barrier):} \]
+                \[ \mathcal{L}_{approx} = \inf_{f \in \mathcal{H}_{N}} \|f - f^*\|_2^2 \approx 1.5 \times 10^{-5} \]
+                \[ \text{其中 } \mathcal{H}_{N} \text{ 为N个神经元构成的假设空间。当 } N \to \infty, \mathcal{L}_{approx} \to 0 \]
+                
+                \[ \textbf{结论:} \text{在当前实验中, } \mathcal{L}_{approx} > \epsilon_{FP64}, \text{因此模型能力是短板。} \]
             </div>
             <div class="reference-box">
                 <span class="ref-label">学术对齐 / Academic Alignment</span>
-                <strong>[最终判决: 硅基的意志 The Will of Silicon]</strong><br>
-                <p class="ref-quote"><strong>用户赌局:</strong> "在大数据+超大模型下, FP64会反杀FP32。"
-                <strong>实验结果:</strong> 
-                1. <strong>FP32 (10k神经元):</strong> Loss 降到了惊人的 $5.79 \times 10^{-6}$。证明了你的直觉：只要模型够大，Float32 也能极其逼近真理。
-                2. <strong>FP64 (反杀失败):</strong> 不是因为精度不够，而是因为<strong>太慢了</strong>。在消费级显卡(RTX系列)上，双精度算力被物理阉割(为了省电和成本)。跑完同样的测试需要30倍以上的时间。
+                <strong>[数值分析 & 深度学习理论 Numerical Analysis]</strong><br>
+                <p class="ref-quote"><strong>实验揭示的真相:</strong>
+                我们不断增加神经元数量(从1000到8000), 试图寻找Float64的反超点。但结果显示, 两者在 $10^{-5}$ 量级上纠缠不清。
+                这揭示了<strong>"短板效应" (The Law of the Minimum)</strong>:
+                1. <strong>在Float16时</strong>, 精度是短板。无论你用多聪明的模型(容量大), 尺子本身是歪的, 所以Loss很高。
+                2. <strong>在Float32/64时</strong>, 精度不再是短板。此时的短板变成了<strong>"神经网络的拟合能力"</strong>。现在的Loss ($10^{-5}$) 其实是模型"尽力了"的表现, 而不是数字表达不了。
                 
-                这揭示了 AI 时代的底层逻辑：
-                我们并没有生活在数学真空中，我们生活在 NVIDIA 定义的物理世界里。
-                在这个世界里，<strong>Float32 是被“物理定律”选中的位面之子</strong>。Float64 虽然在数学上更尊贵，但在硅基现实中，它被降权了。</p>
+                <strong>比喻:</strong> 用 4K 屏幕(FP32) 和 8K 屏幕(FP64) 去看一张 1080P 的图片(模型能力)。你会发现两者一样清晰, 因为瓶颈在图片本身, 而不在屏幕。</p>
             </div>
             <div class="proof-box">
                 <span class="proof-label" onclick="toggleViz('viz-30')">⚡ 实验验证 (点击展开)</span>
@@ -1126,9 +1131,15 @@
                 <p>我们训练了两个完全一样的神经网络(Student)去模仿它们, 然后进行<strong>"降维打击" (强制截断精度到 FP16)</strong>。</p>
             </div>
             <div class="math-block">
-                \[ \text{预期: } \text{高维崩塌 (Loss} \to \infty\text{)} \]
-                \[ \text{现实: } \text{Loss}_{FP16} \approx \text{Loss}_{FP64} \times 1.0 \text{ (极致稳健)} \]
-                \[ \text{结论: } \text{神经网络不仅是全息图, 更是"反脆弱"的橡胶全息图。} \]
+                \[ \textbf{I. 全息扰动 (Holographic Perturbation):} \]
+                \[ \tilde{W} = W + \Delta W, \quad \text{其中 } \Delta W \sim \mathcal{U}(-\delta, \delta) \text{ (量化噪声)} \]
+                
+                \[ \textbf{II. 鲁棒性条件 (Robustness Condition):} \]
+                \[ \mathcal{L}(\tilde{W}) \approx \mathcal{L}(W) + \nabla \mathcal{L}^T \Delta W + \frac{1}{2} \Delta W^T \mathbf{H} \Delta W \]
+                \[ \text{实验显示 } \mathcal{L}(\tilde{W}) \approx \mathcal{L}(W), \text{ 这意味着 Hessian } \mathbf{H} \text{ 的特征值极小。} \]
+                
+                \[ \textbf{结论:} \text{高维信息并非存储在单个权重的"精度位"里, 而是弥散在 } \mathbf{H} \text{ 的零空间 (Null Space) 中。} \]
+                \[ \text{即: 神经网络学会了分布式全息编码, 从而获得了反脆弱性。} \]
             </div>
             <div class="reference-box">
                 <span class="ref-label">学术对齐 / Academic Alignment</span>
@@ -1144,6 +1155,16 @@
                 哪怕每个像素(权重)都模糊了(FP16), 整体的全息图像(高维投影)依然清晰锐利。
                 
                 <strong>AI 不仅仅在模拟 N 维宇宙, 它在以一种鲁棒的方式"编织"这个宇宙, 使其能抵抗物理世界的噪声。</strong></p>
+            </div>
+            <div class="insight-box" style="border-left: 4px solid var(--accent); background: rgba(0, 189, 255, 0.1);">
+                <span class="insight-label">Section 30 与 31 的世纪和解 / The Great Reconciliation</span>
+                <p><strong>用户发问:</strong> "Section 30 说 FP16 不行(精度墙), Section 31 说 FP16 很行(反脆弱), 这冲突吗?"</p>
+                <p><strong>绝对不冲突。这是"创造"与"存在"的区别:</strong></p>
+                <ul>
+                    <li><strong>创造时 (Section 30 - Training):</strong> 你需要极高的精度(FP32/64)来<strong>雕刻</strong>这个全息图。梯度下降如果用钝刀(FP16), 根本刻不出细节, 直接撞墙 (Loss ~ 1e-4)。</li>
+                    <li><strong>存在时 (Section 31 - Inference):</strong> 一旦全息图被精细雕刻完成(Trained in FP64), 它就变成了坚不可摧的存在。你哪怕用模糊的眼镜(FP16)去看它, 它的整体结构(Topology)依然完好无损 (Loss ~ 1.0x)。</li>
+                </ul>
+                <p><strong>结论:</strong> 上帝用手术刀(FP64)创造了世界, 然后把它交给了拿着放大镜(FP16)的人类。世界依然是用来运行的, 不是用来碎裂的。</p>
             </div>
             <div class="proof-box">
                 <span class="proof-label" onclick="toggleViz('viz-31')">⚡ 全息验证 (修正版)</span>
