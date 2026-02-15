@@ -1078,23 +1078,23 @@
             </div>
             <div class="reference-box">
                 <span class="ref-label">学术对齐 / Academic Alignment</span>
-                <strong>[维度能量法则 & 可证伪性 Dimensional Energy Law & Falsifiability]</strong><br>
-                <p class="ref-quote"><strong>实验结果揭示了残酷的物理真相:</strong>
+                <strong>[各向同性满秩噪声下的 SNR 缩放命题 / SNR Scaling Proposition under Isotropic Full-Rank Noise]</strong><br>
+                <p class="ref-quote"><strong>实验结果揭示了模型内的统计几何现象:</strong>
                 
-                1. <strong>绿线 (理想):</strong> Loss=0%。证明几何上高维空间是完美的容器。
+                1. <strong>绿线 (理想):</strong> Loss=0%。
                 2. <strong>红线 (现实):</strong> 随着维度增加(3→1000), 信号被淹没。
                 
-                <strong>为什么会淹没? (The Physics of Drowning)</strong>
-                这并非几何的诅咒, 而是<strong>能量的铁律</strong>。
-                我们的实验前提是: 信号能量不变, 但噪声是各向同性的(充满整个空间, $E_{noise} \propto d$)。
+                <strong>缩放命题 (Scaling Statement):</strong>
+                若定义信噪比为能量比 $SNR = \frac{\|S\|^2}{\mathbb{E}[\|N\|^2]}$, 且假设噪声为各向同性满秩高斯分布 ($\mathbb{E}[\|N\|^2] = d \sigma^2$), 信号能量固定, 则:
+                \[ SNR(d) \propto \frac{1}{d} \]
                 
-                <strong>维度能量法则 (Dimensional Energy Law):</strong>
-                "为了在更高维度存在, 你必须拥有极高的能量(振幅)来对抗指数级增长的寂静(噪声)。"
-                具体来说, 你的信号振幅必须随 $\sqrt{d}$ 增长, 才能维持信噪比(SNR)不变。
+                <strong>谱分离条件 (Spectral Separation Condition):</strong>
+                真正的恢复阈值并非取决于 SNR 的绝对值, 而是取决于<strong>谱分离 (Spectral Separation)</strong>。
+                若信号子空间的最小特征值 $\lambda_{min}(S)$ 仍显著大于噪声谱的上界 $\lambda_{max}(N)$, 则结构依然可被完美恢复。
+                实验中的"淹没", 本质上是信号特征值滑落到了庞大的噪声谱之下 (Marchenko-Pastur 分布覆盖了信号)。
                 
                 <strong>可证伪性 (Falsifiability):</strong>
-                这个结论是可以被证伪的。如果我们改变噪声模型(如低秩噪声), 或者让信号能量随维度增长, "淹没"现象就会消失。
-                因此, 这不是宇宙的死刑判决, 而是对高维存在的<strong>准入资格要求</strong>。</p>
+                此命题严格受限于"满秩噪声"假设。若噪声处于低秩子空间, 或信号功率随维度 $d$ 线性增长, 则该缩放规律失效。这标志着我们从叙事构建转向了严格的<strong>约束求解</strong>。</p>
             </div>
             <div class="proof-box">
                 <span class="proof-label" onclick="toggleViz('viz-29')">⚡ 实验验证 (点击展开)</span>
