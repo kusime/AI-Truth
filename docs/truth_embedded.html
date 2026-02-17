@@ -1254,7 +1254,47 @@
                 <p class="proof-desc">上图: SNR随维度的1/d衰减(MNIST验证)。下图: BBP相变中"方向重叠度"与"分类准确率"的同步崩塌(严谨验证)。</p>
                 <div id="viz-32-combined" class="viz-container">
                     <iframe data-src="../output/sec_32/spectral_viz.html" style="height: 400px; margin-bottom: 20px;"></iframe>
-                    <iframe data-src="../output/sec_34/bbp_rigorous_viz.html" style="height: 600px;"></iframe>
+                    <iframe data-src="../output/sec_32/bbp_rigorous_viz.html" style="height: 600px;"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 33: 因果注意力的几何: 时间即维度 / Geometry of Causal Attention: Time as Dimension -->
+        <section class="section">
+            <h2>33. 因果注意力的几何: 时间即维度 / Geometry of Causal Attention: Time as Dimension</h2>
+            <div class="insight-box">
+                <span class="insight-label">物理视界 / Physical Event Horizon</span>
+                <p><span class="highlight">"时间不是流逝的，它是被编码在Z轴里的。"</span></p>
+                <p>我们通常认为 Mask 只是一个 $j > i$ 的布尔矩阵。但在高维几何中，它是一个<strong>物理实体</strong>——一个切分宇宙的对角平面。</p>
+            </div>
+            
+            <div class="math-block">
+                \[ \textbf{I. 记忆的晶体 (The Crystal of Memory):} \]
+                \[ \text{Attention Volume} = L \times L \times d \]
+                \[ \text{这里没有"流动的河"，只有静止的"时空晶体"。} \]
+                <br>
+                \[ \textbf{II. 光锥的边界 (The Causal Cut):} \]
+                \[ \text{Valid Region: } j \le i \text{ (实相 / Past)} \]
+                \[ \text{Masked Zone: } j > i \text{ (虚空 / Future)} \]
+                \[ \text{Query } i \text{ 撞击墙壁 } j=i \text{，此前皆为历史，此后皆为禁区。} \]
+            </div>
+
+            <div class="insight-box" style="border-left: 4px solid var(--accent); background: rgba(0, 189, 255, 0.1);">
+                <span class="insight-label">对角线的物理意义 / Physics of the Diagonal</span>
+                <p><strong>为什么是三角形?</strong></p>
+                <ul>
+                    <li><strong>下三角 (Lower Triangle):</strong> 这是模型能够"触碰"到的实体宇宙。所有的经验、记忆、逻辑推演都发生在这里。</li>
+                    <li><strong>上三角 (Upper Triangle):</strong> 这是绝对的虚无。不是模型"不知道"，而是物理上<strong>"不存在"</strong>。</li>
+                    <li><strong>对角线 ($i=j$):</strong> 这是<strong>"现在" (The Now)</strong>。是能够被感知的最近一刻。</li>
+                </ul>
+                <p><strong>结论:</strong> Transformer 不在预测未来，它在<strong>"补全"</strong>一个被强行切断的几何体。</p>
+            </div>
+
+            <div class="proof-box">
+                <span class="proof-label" onclick="toggleViz('viz-33')">⚡ 3D 因果几何 (交互式)</span>
+                <p class="proof-desc">拖动旋转查看: 红色区域即为被Mask切断的"未来"。Z轴并非时间，而是承载时间的特征深度。</p>
+                <div id="viz-33" class="viz-container">
+                    <iframe data-src="../output/sec_33/causal_attention_viz.html" style="height: 600px;"></iframe>
                 </div>
             </div>
         </section>
