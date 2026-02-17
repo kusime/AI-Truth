@@ -1,4 +1,3 @@
-
 import os
 import sys
 import time
@@ -11,10 +10,11 @@ from plotly.subplots import make_subplots
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from src.sec_36_gravity_engine import GravityEngine, get_data
 
-# --- Configuration ---
+# --- 实验核心配置 ---
 OUTPUT_DIR = "output/sec_38"
-NOISE_INTENSITY = 0.8  # How "bright" the noise is (0-1)
-SEQUENCE_LENGTH = 56   # 28 rows * 2 (Dilated by 2x for noise injection)
+NOISE_INTENSITY = 1   # 噪声强度 (0-1)，越接近1越吵
+NOISE_RATIO = 0.99      # 噪声比例 (0.99 = 99% 噪声, 0.999 = 99.9% 噪声)
+TARGET_DIGIT = 3        # 我们要从混沌中吸取的“真理”
 
 # ==========================================
 # PART 1: The Physics of "Selection"
@@ -22,74 +22,47 @@ SEQUENCE_LENGTH = 56   # 28 rows * 2 (Dilated by 2x for noise injection)
 
 class MassSelector:
     """
-    The Physics Engine's 'Gatekeeper'.
-    Calculates the 'Gravitational Mass' (Importance) of an incoming data packet.
+    物理引擎的“守门人”：计算流入数据的“引力质量”。
     """
     @staticmethod
     def calculate_mass(frame):
-        """
-        Input: frame (28,) - A single row of pixels.
-        Output: mass (scalar 0-1)
-        
-        Physics Heuristic V2: "Smoothness implies Structure" (Total Variation).
-        - Real Strokes: [0 0 1 1 1 1 0 0]. Jumps = 2. Low TV.
-        - Noise: [0.2 0.8 0.1 0.9 ...]. Jumps = Many. High TV.
-        """
         max_val = np.max(frame)
         
-        # Rule A: Silence has no mass
+        # 规则 A：虚无没有质量
         if max_val < 0.2:
             return 0.0
             
-        # Rule B: Calculate Total Variation (sum of absolute differences)
-        # Measures "High Frequency" content
+        # 规则 B：计算全变分 (Total Variation)
+        # 信号是平滑的（TV低），噪声是剧烈抖动的（TV高）
         diffs = np.abs(np.diff(frame))
         tv = np.sum(diffs)
         
-        # Theoretical Max TV for 0-1 noise: ~14.0 (avg jump 0.5 * 28)
-        # Theoretical TV for stroke: ~2.0 (up and down)
-        
-        # Threshold: If it wiggles too much, it's Entropy.
-        if tv > 4.5: 
-            return 0.0 # Reject Entropy
+        # 极限挑战建议：
+        # 如果噪声达到 99.9%，这里建议调得更严苛（比如 3.5）
+        if tv > 4.2: 
+            return 0.0 # 判定为熵（垃圾），离心甩飞
             
-        # Rule C: It's a clean, smooth structure (Signal)
+        # 规则 C：判定为有结构的真理
         return 1.0
 
 class GravityMamba:
     """
-    Selective Gravity Accumulator.
-    Simulates: h_t = h_{t-1} + Mass_t * (x_t - h_{t-1})
+    选择性引力累加器。
+    模拟公式：h_t = h_{t-1} + Mass_t * (x_t - h_{t-1})
     """
     def __init__(self, shape=(28, 28)):
         self.shape = shape
-        self.h = np.zeros(shape) # The "Hidden State" (Canvas)
+        self.h = np.zeros(shape)
         self.history = []
         self.mass_history = []
         
     def step(self, frame, row_idx):
-        """
-        Absorb a row into the state, BUT only if it has Mass.
-        row_idx: Where this frame *belongs* spatially (if we know it).
-        In a pure RNN, we might not know row_idx, but for Image Reconstruction,
-        we assume we are 'scanning' the image.
-        """
-        # 1. Calculate Mass (Selection)
+        # 1. 计算引力质量
         mass = MassSelector.calculate_mass(frame)
         self.mass_history.append(mass)
         
-        # 2. Update State
-        # We only update the specific row in the state (Conceptually 'Writing' to memory)
-        # OR: We could update the whole state vector if it was holographic.
-        # For visual clarity: We write to the specific row of the image canvas.
-        
+        # 2. 状态更新（引力坍缩）
         current_row_val = self.h[row_idx, :]
-        
-        # Physics Update: Conservation of Momentum?
-        # New = Old + Mass * (Input - Old) -> Exponential Moving Average-ish
-        # If Mass=1, New = Input (Full Replace)
-        # If Mass=0, New = Old (Ignore Input)
-        
         new_row_val = current_row_val * (1 - mass) + frame * mass
         self.h[row_idx, :] = new_row_val
         
@@ -97,8 +70,7 @@ class GravityMamba:
 
 class NaiveAccumulator:
     """
-    The 'Transformer' / Standard RNN.
-    Absorbs EVERYTHING. No Gating.
+    传统朴素模型：全盘接收，没有物理过滤。
     """
     def __init__(self, shape=(28, 28)):
         self.shape = shape
@@ -106,49 +78,36 @@ class NaiveAccumulator:
         self.history = []
         
     def step(self, frame, row_idx):
-        # Naive: Mass is always 1.0 (or fixed learning rate)
-        # We just overwrite/add. 
-        # If we overwrite, noise overwrites signal.
-        # Let's say we 'Add' to the canvas? No, that overflows.
-        # Let's say we 'Replace' based on time.
-        
-        # If multiple frames map to same row (noise injection), 
-        # the latest one wins in a naive system without history protection.
         self.h[row_idx, :] = frame 
         self.history.append(self.h.copy())
 
 
 # ==========================================
-# PART 2: The Stream Generation
+# PART 2: The Stream Generation (极限重构版)
 # ==========================================
 
-def create_noisy_stream(digit_img, noise_level=0.5):
+def create_noisy_stream(digit_img, noise_ratio=0.8, noise_level=0.5):
     """
-    Takes a 28x28 digit.
-    Returns a stream of (row_idx, frame_pixels).
-    Injects random noise frames in between real frames.
+    生成一个包含极端噪声的数据流。
+    noise_ratio: 噪声占总数据包的比例。
     """
     stream = []
-    
-    # Iterate through real rows
+    # 计算每个信号帧之间需要插入多少个噪声帧
+    # 比例公式：N_noise / (1 + N_noise) = ratio -> N_noise = ratio / (1 - ratio)
+    num_noise_per_signal = int(noise_ratio / (1 - noise_ratio)) if noise_ratio < 1 else 1000
+
     for r in range(28):
-        # 1. The Real Signal
-        real_row = digit_img[r, :]
+        # 1. 注入真实信号（真理）
         stream.append({
             'type': 'signal',
             'row_idx': r,
-            'data': real_row
+            'data': digit_img[r, :]
         })
         
-        # 2. The Entropy Injection (Time Travel Garbage)
-        # Random chance to insert noise packets
-        if np.random.rand() < 0.8: # 80% chance of noise between lines
+        # 2. 注入密集噪声（熵增）
+        for _ in range(num_noise_per_signal):
             noise_row = np.random.rand(28) * noise_level 
-            # Make it "White Noise" (High Entropy)
-            
-            # Target a random row index to mess up the state
-            # (Simulating "Future" or "Past" confusion)
-            target_r = r 
+            target_r = np.random.randint(0, 28) # 随机干扰任意行
             
             stream.append({
                 'type': 'noise',
@@ -159,18 +118,13 @@ def create_noisy_stream(digit_img, noise_level=0.5):
     return stream
 
 # ==========================================
-# PART 3: Visualization & Comparison
+# PART 3: Visualization (保持不变)
 # ==========================================
 
 def visualize_mamba_physics(stream, mamba_hist, naive_hist, mass_log, digit_label):
-    """
-    HTML Animation of the process.
-    """
-    print("Generating Animation...")
-    
+    print(f"正在生成动画 (总步数: {len(stream)})...")
     steps = len(stream)
     
-    # Create Figure
     fig = make_subplots(
         rows=2, cols=3,
         subplot_titles=[
@@ -184,136 +138,99 @@ def visualize_mamba_physics(stream, mamba_hist, naive_hist, mass_log, digit_labe
         vertical_spacing=0.15
     )
     
-    # Add initial traces
-    # 1. Incoming Stream (1D strip)
-    fig.add_trace(go.Heatmap(z=np.zeros((1, 28)), colorscale='Greys', zmin=0, zmax=1), row=1, col=1)
-    
-    # 2. Naive State
-    fig.add_trace(go.Heatmap(z=np.zeros((28, 28)), colorscale='Greys', zmin=0, zmax=1), row=1, col=2)
-    
-    # 3. Mamba State
-    fig.add_trace(go.Heatmap(z=np.zeros((28, 28)), colorscale='Greys', zmin=0, zmax=1), row=1, col=3)
-    
-    # 4. Mass Log (Scatter)
-    fig.add_trace(go.Scatter(x=[], y=[], mode='lines+markers', line=dict(color='cyan')), row=2, col=1)
-    
-    # 5. Final Results (Placeholders, updated in frames)
-    fig.add_trace(go.Heatmap(z=np.zeros((28, 28)), colorscale='Greys', zmin=0, zmax=1), row=2, col=2)
-    fig.add_trace(go.Heatmap(z=np.zeros((28, 28)), colorscale='Greys', zmin=0, zmax=1), row=2, col=3)
+    # Heatmap setup with explicit range and colorscale
+    # We use 'Greys_r' so 0 is Black (background) and 1 is White (signal)
+    hm_config = dict(colorscale='Greys_r', zmin=0, zmax=1, showscale=False)
 
-    # Frames
+    fig.add_trace(go.Heatmap(z=np.zeros((1, 28)), **hm_config), row=1, col=1)
+    fig.add_trace(go.Heatmap(z=np.zeros((28, 28)), **hm_config), row=1, col=2)
+    fig.add_trace(go.Heatmap(z=np.zeros((28, 28)), **hm_config), row=1, col=3)
+    fig.add_trace(go.Scatter(x=[], y=[], mode='lines+markers', line=dict(color='cyan', width=2)), row=2, col=1)
+    fig.add_trace(go.Heatmap(z=np.zeros((28, 28)), **hm_config), row=2, col=2)
+    fig.add_trace(go.Heatmap(z=np.zeros((28, 28)), **hm_config), row=2, col=3)
+
     frames = []
+    # Sampling for performance
+    sample_rate = max(1, steps // 200) 
     
-    for t in range(steps):
+    for t in range(0, steps, sample_rate):
         packet = stream[t]
-        row_idx = packet['row_idx']
-        data = packet['data']
-        is_noise = packet['type'] == 'noise'
-        
-        # Current Mass
-        mass = mass_log[t]
-        
-        # Viz: Incoming row as a 1x28 bar
-        incoming_viz = data.reshape(1, 28)
-        
         frames.append(go.Frame(
             data=[
-                go.Heatmap(z=incoming_viz), # Stream
-                go.Heatmap(z=naive_hist[t]), # Naive
-                go.Heatmap(z=mamba_hist[t]), # Mamba
-                go.Scatter(x=list(range(t+1)), y=mass_log[:t+1]), # Mass Plot
-                go.Heatmap(z=naive_hist[t]), # Result Copy
-                go.Heatmap(z=mamba_hist[t])  # Result Copy
+                go.Heatmap(z=packet['data'].reshape(1, 28), **hm_config),
+                go.Heatmap(z=naive_hist[t], **hm_config),
+                go.Heatmap(z=mamba_hist[t], **hm_config),
+                go.Scatter(x=list(range(t+1)), y=mass_log[:t+1]),
+                go.Heatmap(z=naive_hist[t], **hm_config),
+                go.Heatmap(z=mamba_hist[t], **hm_config)
             ],
             name=f"fr{t}",
             layout=go.Layout(
-                title_text=f"Time Step {t}: [{'NOISE' if is_noise else 'SIGNAL'}] Row {row_idx} | Mass Assigned: {mass:.2f}"
+                title_text=f"Step {t}/{steps} | Type: {packet['type'].upper()} | Mass: {mass_log[t]:.2f}"
             )
         ))
 
     fig.frames = frames
     
-    # Play Button
+    # Update layout and Axes properly
     fig.update_layout(
-        title=f"<b>Mamba Physics: Gravity Selection vs Entropy</b><br>Target Digit: {digit_label} | Blue=Signal, Red=Noise",
-        height=800,
-        updatemenus=[{
-            "buttons": [
-                {"args": [None, {"frame": {"duration": 100, "redraw": True}, "fromcurrent": True}],
-                 "label": "Play", "method": "animate"}
-            ],
-            "type": "buttons",
-            "showactive": False,
-            "x": 0.1, "y": -0.1
-        }],
-        template="plotly_dark"
+        title=f"<b>Gravity Mamba vs 99% Noise</b> | Target: {digit_label} | Ratio: {NOISE_RATIO*100}%",
+        height=900,
+        updatemenus=[{"buttons": [{"args": [None, {"frame": {"duration": 50, "redraw": True}}], "label": "Play", "method": "animate"}], "type": "buttons"}],
+        template="plotly_dark",
+        margin=dict(l=20, r=20, t=80, b=20)
     )
     
-    # Fix Axes
-    fig.update_yaxes(autorange='reversed', row=1, col=1)
-    fig.update_yaxes(autorange='reversed', row=1, col=2)
-    fig.update_yaxes(autorange='reversed', row=1, col=3)
-    fig.update_yaxes(autorange='reversed', row=2, col=2)
-    fig.update_yaxes(autorange='reversed', row=2, col=3)
-    fig.update_yaxes(range=[-0.1, 1.1], title="Mass (Importance)", row=2, col=1)
+    # Explicitly set Axis Ranges for Heatmaps (Top-Left Origin convention)
+    # Row 1, Col 1 (1x28): range [0.5, -0.5] means top is -0.5, bottom is 0.5. y=0 is center.
+    fig.update_yaxes(range=[0.5, -0.5], row=1, col=1)
+    
+    # Other Heatmaps (28x28): range [27.5, -0.5] puts y=0 at top, y=27 at bottom.
+    for r in [1, 2]:
+        for c in [1, 2, 3]:
+            if (r == 1 and c == 1) or (r == 2 and c == 1):
+                continue
+            fig.update_yaxes(range=[27.5, -0.5], row=r, col=c)
+    
+    # Scatter Axis (Mass Log)
+    fig.update_yaxes(range=[-0.1, 1.1], title="Mass (Gravity)", row=2, col=1)
+    fig.update_xaxes(title="Time Step", row=2, col=1)
     
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     out_path = os.path.join(OUTPUT_DIR, "mamba_gravity_simulation.html")
     fig.write_html(out_path)
-    print(f"Simulation saved to {out_path}")
+    print(f"实验报告已生成: {out_path}")
 
 def main():
-    print("Loading Truth (Data)...")
     train_x, train_y, test_x, test_y = get_data()
-    
-    # Pick a target digit
-    # Index 0 is ambiguous (predicts 2). Let's try Index 1.
-    target_idx = np.where(test_y == 3)[0][1] 
+    target_idx = np.where(test_y == TARGET_DIGIT)[0][1] 
     target_img = test_x[target_idx].reshape(28, 28)
     
-    print("Injecting Time-Entropy (Noise Stream)...")
-    # Stream is a list of dicts: {'row_idx', 'data', 'type'}
-    stream = create_noisy_stream(target_img, noise_level=0.8)
+    # 执行极限噪声注入
+    stream = create_noisy_stream(target_img, noise_ratio=NOISE_RATIO, noise_level=NOISE_INTENSITY)
     
-    print(f"Stream Length: {len(stream)} packets (28 Real + Noise)")
-    
-    # Initialize Physics Models
     mamba = GravityMamba()
     naive = NaiveAccumulator()
     
-    # Run Simulation
-    print("Running Physics Simulation...")
+    print(f"开始物理模拟，当前噪声占比: {NOISE_RATIO*100}%...")
     for packet in stream:
-        frame = packet['data']
-        r_idx = packet['row_idx']
+        mamba.step(packet['data'], packet['row_idx'])
+        naive.step(packet['data'], packet['row_idx'])
         
-        mamba.step(frame, r_idx)
-        naive.step(frame, r_idx)
-        
-    # Analyze Final States with Gravity Engine
-    # Flatten Back to 784D
-    final_mamba = mamba.h.reshape(784)
-    final_naive = naive.h.reshape(784)
-    
-    # Load Engine for Validation
+    print("验证推理结果...")
     engine = GravityEngine()
-    print("Training Gravity Engine (10k samples)...")
     engine.fit(train_x[:10000], train_y[:10000]) 
     
-    # Check Baseline (The Clean, Perfect '3')
-    pred_clean, _ = engine.predict(target_img.reshape(1, -1))
-    
-    pred_mamba, _ = engine.predict(final_mamba.reshape(1, -1))
-    pred_naive, _ = engine.predict(final_naive.reshape(1, -1))
+    pred_mamba, _ = engine.predict(mamba.h.reshape(1, -1))
+    pred_naive, _ = engine.predict(naive.h.reshape(1, -1))
     
     print("="*40)
-    print(f"RESULTS for Digit 3:")
-    print(f"Baseline (Clean Image): {pred_clean[0]}")
-    print(f"Mamba Reconstruction:   {pred_mamba[0]}")
-    print(f"Naive Reconstruction:   {pred_naive[0]}")
+    print(f"极限测试结果 (噪声 {NOISE_RATIO*100}%):")
+    print(f"Mamba (引力过滤) 预测结果: {pred_mamba[0]}  {'✅' if pred_mamba[0]==TARGET_DIGIT else '❌'}")
+    print(f"Naive (朴素集成) 预测结果: {pred_naive[0]}  {'✅' if pred_naive[0]==TARGET_DIGIT else '❌'}")
     print("="*40)
     
-    visualize_mamba_physics(stream, mamba.history, naive.history, mamba.mass_history, 3)
+    visualize_mamba_physics(stream, mamba.history, naive.history, mamba.mass_history, TARGET_DIGIT)
 
 if __name__ == "__main__":
     main()
