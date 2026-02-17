@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HOLO: X·T 理论 - 数字生命的物理本质与演化白皮书</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         :root {
@@ -1295,6 +1302,46 @@
                 <p class="proof-desc">拖动旋转查看: 红色区域即为被Mask切断的"未来"。Z轴并非时间，而是承载时间的特征深度。</p>
                 <div id="viz-33" class="viz-container">
                     <iframe data-src="../output/sec_33/causal_attention_viz.html" style="height: 600px;"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 34: 欧拉单纯形: 高维崩塌的常数 / Euler's Simplex: The Constant of High-Dimensional Collapse -->
+        <section class="section">
+            <h2>34. 欧拉单纯形: 高维崩塌的常数 / Euler's Simplex: The Constant of High-Dimensional Collapse</h2>
+            <div class="insight-box">
+                <span class="insight-label">维度崩塌常数 / The Collapse Constant</span>
+                <p><span class="highlight">"为什么自然常数 e 会出现在随机加法里?"</span></p>
+                <p>想象你在高维空间堆积能量(随机变量)。每一维都贡献 $X_i \in [0,1)$。</p>
+                <p>当你终于"撑破"单位容量 (Sum > 1) 时，你平均需要的维数，不多不少，正好是 $e$。</p>
+                <p>这意味着: $e$ 是高维单纯形维持"存在"(Sum $\le$ 1)的极限维度密度。</p>
+            </div>
+            
+            <div class="math-block">
+                \[ \textbf{I. 单纯形体积 (Simplex Volume):} \]
+                \[ Vol(\Delta^n) = \frac{1}{n!} = P(\sum_{i=1}^n X_i \le 1) \]
+                <br>
+                \[ \textbf{II. 崩塌期望 (Expected Collapse):} \]
+                \[ \text{我们需要 } n \text{ 个维度的概率 } = P(N \ge n) = Vol(\Delta^{n-1}) = \frac{1}{(n-1)!} \]
+                \[ E[N] = \sum_{n=1}^{\infty} P(N \ge n) = \sum_{k=0}^{\infty} \frac{1}{k!} = e \]
+            </div>
+
+            <div class="reference-box">
+                <span class="ref-label">学术对齐 / Academic Alignment</span>
+                <strong>[Irwin-Hall 分布与高维几何 / Irwin-Hall Distribution]</strong><br>
+                <p class="ref-quote"><strong>物理意义:</strong> 
+                这个实验揭示了高维空间的"容积率"。
+                在 $n$ 维立方体中，满足线性约束 ($\sum x_i \le 1$) 的"安全区"(单纯形)体积是 $1/n!$。
+                随着维度 $n$ 增加，$1/n!$ 极速收缩。
+                这意味着高维空间中，"有序"(Linear Order) 是极度稀缺的资源。
+                $e$ 是连接这种几何收缩与统计期望的桥梁。它是"无序推积"突破"有序边界"的平均临界点。</p>
+            </div>
+
+            <div class="proof-box">
+                <span class="proof-label" onclick="toggleViz('viz-34')">⚡ 欧拉单纯形模拟 (蒙特卡洛)</span>
+                <p class="proof-desc">1000万次高维模拟。频率分布展示了 collapse 发生在第 2, 3, 4... 维的概率。平均值严格收敛于 e。</p>
+                <div id="viz-34" class="viz-container">
+                    <iframe data-src="../output/sec_34/euler_simulation.html" style="height: 900px;"></iframe>
                 </div>
             </div>
         </section>
