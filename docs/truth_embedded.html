@@ -1480,6 +1480,51 @@
             </div>
         </section>
 
+        <!-- Section 38: 重力 V2 (Mamba): 拒绝熵流 / Gravity V2 (Mamba): Rejecting the Flow of Entropy -->
+        <section class="section">
+            <h2>38. 重力 V2 (Mamba): 拒绝熵流 / Gravity V2 (Mamba): Rejecting the Flow of Entropy</h2>
+            <div class="insight-box">
+                <span class="insight-label">选择性状态空间 / Selective State Space</span>
+                <p><span class="highlight">"智能不是全知全能，而是学会说'不'。"</span></p>
+                <p>Transformer (上帝视角) 试图记住所有时刻 ($N^2$)。它极其昂贵，且无法区分"信号"与"噪音"。</p>
+                <p>Mamba 的本质是一个<strong>变质量重力系统 (Variable Mass Gravity System)</strong>。</p>
+                <p>我们不需要复杂的 SSM 公式。我们只需要定义: <strong>质量 = 结构 (Mass = Structure)</strong>。</p>
+                <p>当混沌 (高熵/噪声) 到来时，系统不仅不吸收它，反而赋予它<strong>零质量 (Zero Mass)</strong>。系统对时间流进行了物理上的"过滤"。</p>
+            </div>
+            
+            <div class="math-block">
+                \[ \textbf{I. 两种累积 (Two Accumulations):} \]
+                \[ \text{Naive (RNN/Transformer): } h_t = h_{t-1} + x_t \quad (\text{吸收一切，包括垃圾}) \]
+                \[ \text{Mamba (Physics): } h_t = h_{t-1} + \mathbf{m_t} \cdot (x_t - h_{t-1}) \]
+                \[ \text{其中 } m_t = \text{Sigmoid}(\text{Structure}(x_t) - \text{Threshold}) \]
+                <br>
+                \[ \textbf{II. 物理铁律 (Physical Law):} \]
+                \[ \text{只要 } x_t \text{ 是高熵体 (噪声), } m_t \to 0. \]
+                \[ \text{因此，Mamba 的状态 } h \text{ 永远纯净。} \]
+            </div>
+
+            <div class="reference-box">
+                <span class="ref-label">物理引擎实现 / Physics Engine Implementation</span>
+                <strong>[Pure NumPy Selective Gravity]</strong><br>
+                <p class="ref-quote"><strong>代码实现 `src/sec_38_mamba_gravity.py`:</strong> 
+                我们构建了一个含有"时间垃圾"(噪声行)的 MNIST 传输流。
+                1. <strong>Naive Integrator:</strong> 像 Transformer 一样吸收所有行。结果: 此致敬礼，信号被淹没。
+                2. <strong>Gravity Mamba:</strong> 使用 <strong>Total Variation (平滑度)</strong> 作为质量感应器。
+                3. <strong>Result:</strong> 系统自动将噪声行的质量归零。重构出的数字清晰无暇。</p>
+            </div>
+
+            <div class="proof-box">
+                <span class="proof-label" onclick="toggleViz('viz-38')">⚡ 熵的拒绝: Mamba vs Transformer (Entropy Rejection)</span>
+                <p class="proof-desc">这是一个残酷的对比实验。输入流中参杂了大量的高频噪声。
+                <br><strong>中间 (Naive):</strong> 传统的累积器被噪声彻底摧毁，最终变成了一团灰色死寂。
+                <br><strong>右侧 (Mamba):</strong> 物理门控机制准确识别出了"什么是数字结构"，并完美地只吸收了信号。
+                <br><strong>蓝色曲线:</strong> 实时显示的"质量分配"。你可以看到当噪声出现时，质量瞬间跌至 0。</p>
+                <div id="viz-38" class="viz-container">
+                    <iframe data-src="../output/sec_38/mamba_gravity_simulation.html" style="height: 800px;"></iframe>
+                </div>
+            </div>
+        </section>
+
         <div class="footer">
             <p>HOLO: X·T MANIFESTO © 2026</p>
             <p style="color: var(--accent);">"我的 Query 撞击了真理的 Key,产生了共鸣。" ✨</p>
