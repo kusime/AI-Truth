@@ -1440,6 +1440,46 @@
             </div>
         </section>
 
+        <!-- Section 37: 逆熵: 时间反演与宏观扩散 / Negentropy: Time Reversal & Macroscopic Diffusion -->
+        <section class="section">
+            <h2>37. 逆熵: 时间反演与宏观扩散 / Negentropy: Time Reversal & Macroscopic Diffusion</h2>
+            <div class="insight-box">
+                <span class="insight-label">朗之万动力学 / Langevin Dynamics</span>
+                <p><span class="highlight">"扩散，就是重力场的逆运算。"</span></p>
+                <p>我们通常认为"生成"很难，但物理学告诉我们，如果已知的场 $E(x)$ 存在，生成只是顺势而为。</p>
+                <p>我们将纯高斯噪声 ($t=0$ 的混沌) 放入我们之前计算出的<strong>引力场</strong>中。</p>
+                <p>这不需要任何 U-Net。我们只需要让粒子遵循物理方程: <strong>$dx = -\nabla E(x)dt + \sqrt{2dt}\xi$</strong>。</p>
+                <p>粒子会在热噪声的驱动下，沿着引力线反向攀升，自动凝聚成有意义的数字。这就是<strong>宏观扩散</strong>。</p>
+            </div>
+            
+            <div class="math-block">
+                \[ \textbf{I. 扩散方程 (The Diffusion Equation):} \]
+                \[ x_{t+1} = x_t - \epsilon \nabla E(x_t) + \sqrt{2\epsilon} \mathcal{N}(0, I) \]
+                \[ \text{物理意义: } \text{未来} = \text{现在} + \text{意图(引力)} + \text{直觉(噪声)} \]
+                <br>
+                \[ \textbf{II. 零样本生成 (Zero-Shot Generation):} \]
+                \[ \text{我们没有训练生成器。} \]
+                \[ \text{我们只是定义了"什么是 8"，然后让混沌自己变成了 8。} \]
+            </div>
+
+            <div class="reference-box">
+                <span class="ref-label">物理引擎实现 / Physics Engine Implementation</span>
+                <strong>[Pure NumPy Diffusion]</strong><br>
+                <p class="ref-quote"><strong>代码实现 `src/sec_37_hydro_diffusion.py`:</strong> 
+                1. <strong>Chaos:</strong> 初始化一个纯随机噪声 $x_0 \sim \mathcal{N}(0,1)$。
+                2. <strong>Intent:</strong> 开启 "Digit 8" 的引力井。关闭其他井。
+                3. <strong>Genesis:</strong> 迭代 100 步朗之万动力学。看着噪声在引力牵引下，自行组织成结构。</p>
+            </div>
+
+            <div class="proof-box">
+                <span class="proof-label" onclick="toggleViz('viz-37')">⚡ 创世纪: 从混沌到秩序 (Genesis from Chaos)</span>
+                <p class="proof-desc">这是真实的物理演算过程。最左侧是纯噪声。随着时间推移(向右)，在引力场的作用下，噪声中的像素被强行"纠正"到了正确的位置，最终凝聚成了清晰的数字。这是不依赖神经网络的 Stable Diffusion。</p>
+                <div id="viz-37" class="viz-container">
+                    <iframe data-src="../output/sec_37/macroscopic_diffusion.html" style="height: 600px;"></iframe>
+                </div>
+            </div>
+        </section>
+
         <div class="footer">
             <p>HOLO: X·T MANIFESTO © 2026</p>
             <p style="color: var(--accent);">"我的 Query 撞击了真理的 Key,产生了共鸣。" ✨</p>
